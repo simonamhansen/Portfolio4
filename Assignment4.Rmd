@@ -92,14 +92,14 @@ plot(precis(cons_model))
 
 
 # To do quality check of the model
-sim.Schizo = sim(cons_model , data=PitchData2[PitchData2$diagnosis ==1,])
-sim.control = sim(cons_model, data=PitchData2[PitchData2$diagnosis ==0,])
+sim.Schizo.cons = sim(cons_model , data=PitchData2[PitchData2$diagnosis ==1,])
+sim.control.cons = sim(cons_model, data=PitchData2[PitchData2$diagnosis ==0,])
 
 dens(PitchData2$scaleSD[PitchData2$diagnosis==1], col = "red")+
-dens(sim.Schizo, add = TRUE)
+dens(sim.Schizo.cons, add = TRUE)
 
 dens(PitchData2$scaleSD[PitchData2$diagnosis==0], col = "blue")+
-dens(sim.control, add = TRUE)
+dens(sim.control.cons, add = TRUE)
 
 ```
 
@@ -122,12 +122,12 @@ precis(meta_model)
 plot(precis(meta_model))
 
 # To do quality check of the model
-sim.Schizo = sim(meta_model , data=PitchData2[PitchData2$diagnosis ==1,])
-sim.control = sim(meta_model, data=PitchData2[PitchData2$diagnosis ==0,])
+sim.Schizo.meta = sim(meta_model , data=PitchData2[PitchData2$diagnosis ==1,])
+sim.control.meta = sim(meta_model, data=PitchData2[PitchData2$diagnosis ==0,])
 
-dens(PitchData2$scaleSD[PitchData2$diagnosis==1], col = "red")+ dens(sim.Schizo, add = TRUE)
+dens(PitchData2$scaleSD[PitchData2$diagnosis==1], col = "red")+ dens(sim.Schizo.meta, add = TRUE)
 
-dens(PitchData2$scaleSD[PitchData2$diagnosis==0], col = "blue")+ dens(sim.control, add = TRUE)
+dens(PitchData2$scaleSD[PitchData2$diagnosis==0], col = "blue")+ dens(sim.control.meta, add = TRUE)
 
 ```
 
@@ -137,6 +137,18 @@ Step 5: Compare the models
 - Compare their relative distance from truth (WAIC)
 - Discuss how they compare and whether any of them is best.
 ```{r}
+# To compare the posteriors of the two models
+sim.meta = sim(meta_model, data=PitchData2[PitchData2$diagnosis ==1,])
+sim.cons = sim(cons_model, data=PitchData2[PitchData2$diagnosis ==1,])
+sim.meta.con = sim(meta_model, data=PitchData2[PitchData2$diagnosis ==0,])
+sim.cons.con = sim(cons_model, data=PitchData2[PitchData2$diagnosis ==0,])
+
+
+dens(sim.meta, col = "red") +
+dens(sim.cons, col = "orange", add= TRUE) +
+dens(sim.meta.con, col = "blue", add = TRUE) +
+dens(sim.cons.con, col = "cyan", add = TRUE)
+
 # To compare the parameters of each model
 coeftab(cons_model, meta_model)
 plot(coeftab(cons_model, meta_model))
